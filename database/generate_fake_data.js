@@ -35,7 +35,7 @@ let price = function(num) {
 
 async function makeHouseEntry(lastIndex, id) {
     let rows = [];
-    let chunkSize = 1000;
+    let chunkSize = 200;
 
     for (let i = lastIndex; i < id; i++) {
       await rows.push(house(i));
@@ -47,7 +47,7 @@ async function makeHouseEntry(lastIndex, id) {
 
 async function makePriceEntry(lastIndex,id) {
   let rows = [];
-  let chunkSize = 1000;
+  let chunkSize = 200;
 
   for (let i = lastIndex; i < id; i++) {
     await rows.push(price(i));

@@ -71,6 +71,6 @@ let seed = async function() {
         lastIndex = i;
         // collections = [];
     }
-    return console.log(`Seeding in ${sw.read()/60000} mins`)
+    return console.log(`Seeded in ${sw.read()/60000} mins`)
 }
 seed();
