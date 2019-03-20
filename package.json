@@ -9,7 +9,9 @@
     "start": "nodemon server/index.js",
     "build": "webpack -d --watch",
     "seed-db": "node database/seed-database.js",
-    "seed_postgres": "npx knex seed:run"
+    "seed_postgres": "npx knex seed:run",
+    "seed_mongo": "node --max-old-space-size=8192 ./database/seed_mongoose.js"
+
   },
   "author": "sadie gill",
   "license": "ISC",
