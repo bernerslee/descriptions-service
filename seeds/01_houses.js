@@ -5,9 +5,9 @@ exports.seed = function(knex, Promise) {
   return knex('houses').del()
     .then(async function () {
       // Inserts seed entries
-      // let rows = [];
+
       let lastIndex = 0;
-      for (let i = 0; i <= 10000000; i+=50) {
+      for (let i = 0; i <= 10000000; i+=1000) {
         await makeHouseEntry(lastIndex, i);
         lastIndex=i;
       }
