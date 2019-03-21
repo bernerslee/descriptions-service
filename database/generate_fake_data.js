@@ -60,5 +60,5 @@ async function makePriceEntry(lastIndex,id) {
 // let fakeHouseData = [...Array(10000000).keys()].map(x => ++x).map(id => makeHouseEntry(id));
 // let fakePriceData = [...Array(10000000).keys()].map(x => ++x).map(id => makePriceEntry(id));
 
-module.exports = {makeHouseEntry, makePriceEntry};
+module.exports = {knex, makeHouseEntry, makePriceEntry};
 
