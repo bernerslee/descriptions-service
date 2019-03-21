@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3001
-const db = require('./../database/index.js')
+const HouseModel = require('./../database/index_mongo').HouseModel;
+const PriceModel = require('./../database/index_mongo').PriceModel;
 const cors = require('cors')
 
 app.use(express.static(__dirname + '/./../client/dist'))
@@ -15,8 +16,8 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 
 app.get('/houses/:id', (req, res) => {
-  db.House.findAll(
-    {where: {id: req.params.id}}
+  HouseModel.find(
+    {id: req.params.id}
   ).then(data => {
     res.status(200).send(data);
   })
@@ -27,8 +28,8 @@ app.get('/houses/:id', (req, res) => {
 });
 
 app.get('/prices/:id', (req, res) => {
-  db.Price.findAll(
-    {where: {id: req.params.id}}
+  PriceModel.find(
+    {id: req.params.id}
   ).then(data => {
     res.status(200).send(data);
   })

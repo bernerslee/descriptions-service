@@ -64,13 +64,13 @@ let seed = async function() {
     await PriceModel.deleteMany((err)=> {
         console.log(err)
     });
-    for (let i = 0; i <= 10000000; i+=20000) {
+    for (let i = 0; i <= 10000000; i+=10000) {
 
         await saveHouseCollections(lastIndex, i);
         await savePriceCollections(lastIndex, i);
         lastIndex = i;
         // collections = [];
     }
-    return console.log(`Seeding in ${sw.read()/60000} mins`)
+    return console.log(`Seeded in ${sw.read()/60000} mins`)
 }
 seed();
