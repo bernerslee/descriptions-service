@@ -3,7 +3,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3001
 const db = require('./../database/index.js')
-const cors = require('cors')
+const cors = require('cors');
+const { Pool, Client } = require('pg')
+
 
 app.use(express.static(__dirname + '/./../client/dist'))
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
@@ -15,10 +17,32 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 
 app.get('/houses/:id', (req, res) => {
-  db.House.findAll(
-    {where: {id: req.params.id}}
-  ).then(data => {
-    res.status(200).send(data);
+  const client = new Client({
+    user: 'huy',
+    host: 'localhost',
+    database: 'sdc',
+    password: '1',
+    // port: 3211,
+  })
+
+const pool = new Pool({
+  user: 'huy',
+  host: 'localhost',
+  database: 'sdc',
+  password: '1',
+})
+
+  // client.connect()
+  // .then(() => {
+  //   return
+    pool.query(`SELECT * FROM houses where id = ${req.params.id}`)
+  // })
+  .then((data) => {
+      console.log(data)
+        res.status(200)
+        res.send(data);
+        pool.end();
+        // client.end();
   })
   .catch(err => {
     console.error(err);
@@ -27,10 +51,30 @@ app.get('/houses/:id', (req, res) => {
 });
 
 app.get('/prices/:id', (req, res) => {
-  db.Price.findAll(
-    {where: {id: req.params.id}}
-  ).then(data => {
-    res.status(200).send(data);
+  const client = new Client({
+    user: 'huy',
+    host: 'localhost',
+    database: 'sdc',
+    password: '1',
+    // port: 3211,
+  })
+
+const pool = new Pool({
+  user: 'huy',
+  host: 'localhost',
+  database: 'sdc',
+  password: '1',
+})
+
+  client.connect()
+  .then(() => {
+    return client.query(`SELECT * FROM prices where id = ${req.params.id}`)
+  })
+  .then((data) => {
+      console.log(data)
+        res.status(200)
+        res.send(data);
+        client.end();
   })
   .catch(err => {
     console.error(err);

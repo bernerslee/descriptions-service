@@ -1,5 +1,5 @@
-const knex = require('./database/generate_fake_data').knex;
-const {performance} = require('perf_hooks');
+const knex = require('./database/index_postgres').knex;
+const { performance } = require('perf_hooks');
 
 
 // const testHouseSelect = async function() {
@@ -47,7 +47,15 @@ const {performance} = require('perf_hooks');
 // testPriceRaw();
 
 
-const { Client } = require('pg')
+const { Client, Pool } = require('pg')
+const pool = new Pool({
+    user: 'huy',
+    host: 'localhost',
+    database: 'sdc',
+    password: '1',
+    // port: 3211,
+})
+
 const client = new Client({
     user: 'huy',
     host: 'localhost',
@@ -56,25 +64,53 @@ const client = new Client({
     // port: 3211,
 })
 
-client.connect().then(async ()=>{
-    let t0 = performance.now();
-    await client.query('SELECT * FROM houses where id \= 9999990').then((err, res) => {
+// let testPool = async function() {
+//     let t0 = performance.now();
+//     await pool.query('SELECT * FROM houses where id \= 9999990').then((err, res) => {
+//         console.log(err, res)
+//         // pool.end()
+//     })
+//     let t1 = performance.now();
+//     console.log("Execution time for using pg query to query 'houses' table Postgres DB is  " + (t1 - t0) + " milliseconds.");
+// }
+
+// testPool();
+
+
+    // client.connect().then(async () => {
+    //     let t0 = performance.now();
+    //     await client.query('SELECT * FROM houses where id \= 9999990').then(async (err, res) => {
+    //         console.log(err, res)
+    //         client.end((err) => {
+    //             console.log('client has disconnected')
+    //             if (err) {
+    //                 console.log('error during disconnection', err.stack)
+    //             }
+    //         })
+    //     })
+    //     let t1 = performance.now();
+    //     console.log("Execution time for using pg query to query 'houses' table Postgres DB is  " + (t1 - t0) + " milliseconds.");
+    // })
+
+
+// let testClientPrice = async ()=> {
+        client.connect().then(async () => {
+        let t0 = performance.now();
+        await client.query('SELECT * FROM prices where id \= 9999990').then(async (err, res) => {
             console.log(err, res)
-            client.end()
+            await client.end((err) => {
+                console.log('client has disconnected')
+                if (err) {
+                    console.log('error during disconnection', err.stack)
+                }
+            })
         })
 
-    let t1 = performance.now();
-    console.log("Execution time for using pg query to query 'houses' table Postgres DB is  " + (t1 - t0) + " milliseconds.");
-})
+        let t1 = performance.now();
+        console.log("Execution time for using pg query to query 'prices' table Postgres DB is  " + (t1 - t0) + " milliseconds.");
+    })
+// }
 
-// client.connect().then(async ()=>{
-//     let t0 = performance.now();
-//     await client.query('SELECT * FROM prices where id \= 9999990').then((err, res) => {
-//             console.log(err, res)
-//             client.end()
-//         })
+// testClientPrice();
 
-//     let t1 = performance.now();
-//     console.log("Execution time for using pg query to query 'prices' table Postgres DB is  " + (t1 - t0) + " milliseconds.");
-// })
 
