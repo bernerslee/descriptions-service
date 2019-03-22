@@ -13,5 +13,11 @@ exports.seed = function(knex, Promise) {
         lastIndex=i;
       }
       return console.log(`Seeded in ${sw.read()/60000} mins`)
-    });
+    })
+    .then(async ()=>{
+          await knex.raw("CREATE INDEX on prices \(id)").then(()=>{
+           console.log('index created on id column')
+          });
+          return console.log(`Seeded in ${sw.read()/60000} mins`)
+        })
 };
