@@ -15,71 +15,93 @@ app.use(cors({origin:"http://localhost:3000"}))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-
-app.get('/houses/:id', (req, res) => {
-  const client = new Client({
-    user: 'huy',
-    host: 'localhost',
-    database: 'sdc',
-    password: '1',
-    // port: 3211,
-  })
-
 const pool = new Pool({
   user: 'huy',
   host: 'localhost',
   database: 'sdc',
   password: '1',
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 })
 
-  // client.connect()
-  // .then(() => {
-  //   return
-    pool.query(`SELECT * FROM houses where id = ${req.params.id}`)
-  // })
-  .then((data) => {
-      console.log(data)
-        res.status(200)
-        res.send(data);
-        pool.end();
-        // client.end();
+app.get('/houses/:id', (req, res) => {
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    client.query(`SELECT * FROM houses where id = ${req.params.id}`, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result.rows)
+      res.status(200)
+      res.send(result.rows);
+    })
   })
-  .catch(err => {
-    console.error(err);
-    res.status(404).send()
-  });
 });
 
 app.get('/prices/:id', (req, res) => {
-  const client = new Client({
-    user: 'huy',
-    host: 'localhost',
-    database: 'sdc',
-    password: '1',
-    // port: 3211,
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    client.query(`SELECT * FROM prices where id = ${req.params.id}`, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result.rows)
+      res.status(200)
+      res.send(result.rows);
+    })
   })
-
-const pool = new Pool({
-  user: 'huy',
-  host: 'localhost',
-  database: 'sdc',
-  password: '1',
-})
-
-  client.connect()
-  .then(() => {
-    return client.query(`SELECT * FROM prices where id = ${req.params.id}`)
-  })
-  .then((data) => {
-      console.log(data)
-        res.status(200)
-        res.send(data);
-        client.end();
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(404).send()
-  });
 });
+
+app.post('/prices/:id', (req, res) => {
+  // table.integer('id');
+  //   table.integer('price');
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    var query = 'INSERT INTO prices(id, price) VALUES($1, $2)';
+    var value = [req.params.id, Number(req.query.price)];
+    client.query(query, value, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+app.post('/houses/:id', (req, res) => {
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    var query = 'INSERT INTO houses(id, street, city, state, zipcode, description) VALUES($1, $2, $3, $4, $5, $6)';
+    var value = [req.params.id, req.query.street, req.query.city, req.query.state, req.query.zipcode, req.query.description];
+    client.query(query, value, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+// Create / POST - create a new item
+// Read / GET - read an item
+// Update / PUT - update an item
+// Delete / DELETE - delete an item
 
 module.exports = app; // make available for testing
