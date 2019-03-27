@@ -66,8 +66,8 @@ app.post('/prices/:id', (req, res) => {
     if (err) {
       return console.error('Error acquiring client', err.stack)
     }
-    var query = 'INSERT INTO prices(id, price) VALUES($1, $2)';
-    var value = [req.params.id, Number(req.query.price)];
+    let query = 'INSERT INTO prices(id, price) VALUES($1, $2)';
+    let value = [req.params.id, Number(req.query.price)];
     client.query(query, value, (err, result) => {
       release()
       if (err) {
@@ -85,8 +85,8 @@ app.post('/houses/:id', (req, res) => {
     if (err) {
       return console.error('Error acquiring client', err.stack)
     }
-    var query = 'INSERT INTO houses(id, street, city, state, zipcode, description) VALUES($1, $2, $3, $4, $5, $6)';
-    var value = [req.params.id, req.query.street, req.query.city, req.query.state, req.query.zipcode, req.query.description];
+    let query = 'INSERT INTO houses(id, street, city, state, zipcode, description) VALUES($1, $2, $3, $4, $5, $6)';
+    let value = [req.params.id, req.query.street, req.query.city, req.query.state, req.query.zipcode, req.query.description];
     client.query(query, value, (err, result) => {
       release()
       if (err) {
@@ -99,8 +99,94 @@ app.post('/houses/:id', (req, res) => {
   })
 });
 
-// Create / POST - create a new item
-// Read / GET - read an item
+app.delete('/prices/:id', (req, res) => {
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    let query = `DELETE FROM prices WHERE id = ${req.params.id}`;
+    client.query(query, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+app.delete('/houses/:id', (req, res) => {
+  // table.integer('id');
+  //   table.integer('price');
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    let query = `DELETE FROM houses WHERE id = ${req.params.id}`;
+
+    client.query(query, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+app.put('/prices/:id', (req, res) => {
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    let arr = [];
+    for (let i in req.body) {
+      arr.push(`${i} = ${req.body[i]}`);
+    }
+    let value = arr.join(', ')
+    let query = `UPDATE prices SET ${value} WHERE id = ${req.params.id}`;
+    client.query(query, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+app.put('/houses/:id', (req, res) => {
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack)
+    }
+    let arr = [];
+    for (let i in req.body) {
+      arr.push(`${i} = ${req.body[i]}`);
+    }
+    let value = arr.join(', ')
+    let query = `UPDATE houses SET ${value} WHERE id = ${req.params.id}`;
+
+    client.query(query, (err, result) => {
+      release()
+      if (err) {
+        return console.error('Error executing query', err.stack)
+      }
+      console.log(result)
+      res.status(200)
+      res.send(result);
+    })
+  })
+});
+
+
+
 // Update / PUT - update an item
 // Delete / DELETE - delete an item
 
