@@ -18,7 +18,7 @@ let testPoolHouses = function() {
         if (err) {
           return console.error('Error acquiring client', err.stack)
         }
-        client.query(`SELECT * FROM houses where id = 9999990`, (err, result) => {
+        client.query(`EXPLAIN ANALYZE SELECT * FROM houses where id = 9999990`, (err, result) => {
           release()
           if (err) {
             return console.error('Error executing query', err.stack)

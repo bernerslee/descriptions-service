@@ -1,12 +1,16 @@
 FROM node:10.15.3-alpine
 
-WORKDIR /usr/app
+RUN mkdir -p /app
 
-COPY package.json .
+WORKDIR /app
 
-RUN npm install --quiet
+COPY . /app
 
-COPY . .
+RUN npm install
+
+RUN npm install -g knex
+
+RUN npm run seed_postgres
 
 EXPOSE 8080
 

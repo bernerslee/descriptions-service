@@ -8,7 +8,8 @@ module.exports = {
       host : '127.0.0.1',
       user : 'huy',
       password : '1',
-      database : 'sdc'
+      database : 'sdc',
+      port: '5432'
     },
   },
 
@@ -18,7 +19,8 @@ module.exports = {
       host : '127.0.0.1',
       user : 'huy',
       password : '1',
-      database : 'sdc'
+      database : 'sdc',
+      port: '5432'
     },
     pool: {
       min: 2,
@@ -35,7 +37,8 @@ module.exports = {
       host : '127.0.0.1',
       user : 'huy',
       password : '1',
-      database : 'sdc'
+      database : 'sdc',
+      port: '5432'
     },
     pool: {
       min: 2,
