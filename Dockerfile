@@ -10,6 +10,10 @@ RUN npm install
 
 RUN npm install -g knex
 
+RUN npm run build
+
+RUN knex migrate:latest
+
 RUN npm run seed_postgres
 
 EXPOSE 8080

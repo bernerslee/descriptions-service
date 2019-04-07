@@ -1,15 +1,13 @@
 version: '3'
 
 services:
-  db:
+  database:
     image: postgres:10.7-alpine
-    restart: always
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+
   description:
-    image: hluu5/sdc:zillow-service
+    build: ''
+    depends_on:
+      - 'database'
     deploy:
       replicas: 5
       resources:
@@ -20,8 +18,3 @@ services:
         condition: on-failure
     ports:
       - "8080:8080"
-    networks:
-      - webnet
-networks:
-  webnet:
-
