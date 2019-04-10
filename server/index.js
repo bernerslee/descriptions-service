@@ -20,9 +20,14 @@ const pool = new Pool({
   host: 'localhost',
   database: 'sdc',
   password: '1',
-  max: 20,
-  idleTimeoutMillis: 30000,
+  max: 10,
+  idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,
+})
+
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err)
+  process.exit(-1)
 })
 
 app.get('/houses/:id', (req, res) => {
@@ -35,7 +40,6 @@ app.get('/houses/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result.rows)
       res.status(200)
       res.send(result.rows);
     })
@@ -52,7 +56,6 @@ app.get('/prices/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result.rows)
       res.status(200)
       res.send(result.rows);
     })
@@ -73,7 +76,6 @@ app.post('/prices/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })
@@ -92,7 +94,6 @@ app.post('/houses/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })
@@ -110,7 +111,6 @@ app.delete('/prices/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })
@@ -131,7 +131,6 @@ app.delete('/houses/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })
@@ -154,7 +153,6 @@ app.put('/prices/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })
@@ -178,7 +176,6 @@ app.put('/houses/:id', (req, res) => {
       if (err) {
         return console.error('Error executing query', err.stack)
       }
-      console.log(result)
       res.status(200)
       res.send(result);
     })

@@ -7,7 +7,7 @@
     "test:db": "node_modules/.bin/mocha test/database-test.js",
     "test:api": "node_modules/.bin/mocha test/api-test.js",
     "start": "nodemon server/index.js",
-    "build": "webpack -d --watch",
+    "build": "webpack -d",
     "seed-db": "node database/seed-database.js",
     "seed_postgres": "npx knex seed:run"
   },

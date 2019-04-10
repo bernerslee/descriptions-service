@@ -1,4 +1,4 @@
-const facker = require('faker');
+
 const makeHouseEntry = require('../database/index_postgres.js').makeHouseEntry;
 const stopWatch = require('statman-stopwatch');
 const sw = new stopWatch(true);
@@ -16,7 +16,7 @@ exports.seed = function (knex, Promise) {
       return console.log(`Seeded in ${sw.read() / 60000} mins`)
     })
     .then(async () => {
-      await knex.raw("CREATE INDEX on houses \(id)").then(() => {
+      await knex.raw("CREATE INDEX housesId on houses (id)").then(() => {
         console.log('index created on id column')
       });
       return console.log(`Seeded in ${sw.read() / 60000} mins`)

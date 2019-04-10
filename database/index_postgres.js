@@ -11,7 +11,7 @@ const knex = require('knex')({
       min: 0,
       max: 10,
   },
-  acquireConnectionTimeout: 10000
+  acquireConnectionTimeout: 1000
 });
 
 let house = function (num) {

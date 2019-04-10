@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
     return Promise.all(
-        [knex.schema.createTable('houses', (table) => {
+        [knex.schema.createTableIfNotExists('houses', (table) => {
             table.integer('id').primary();
             table.text('street');
             table.text('city');

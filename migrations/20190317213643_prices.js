@@ -1,6 +1,6 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable('prices', (table) => {
+  return knex.schema.createTableIfNotExists('prices', (table) => {
     table.integer('id');
     table.integer('price');
     table.timestamps(true, true);
