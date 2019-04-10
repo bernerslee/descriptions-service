@@ -17,7 +17,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'huy',
-  host: 'localhost',
+  host: 'database',
   database: 'sdc',
   password: '1',
   max: 20,
