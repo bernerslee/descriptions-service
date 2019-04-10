@@ -1,5 +1,5 @@
 const facker = require('faker');
-const makeHouseEntry = require('../database/generate_fake_data').makeHouseEntry;
+const makeHouseEntry = require('../database/index_postgres.js').makeHouseEntry;
 const stopWatch = require('statman-stopwatch');
 const sw = new stopWatch(true);
 exports.seed = function (knex, Promise) {

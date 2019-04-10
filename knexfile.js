@@ -5,7 +5,7 @@ module.exports = {
   development: {
     client: 'pg',
     connection: {
-      host : 'database',
+      host : 'localhost',
       user : 'huy',
       password : '1',
       database : 'sdc'
@@ -15,7 +15,7 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      host : 'database',
+      host : 'localhost',
       user : 'huy',
       password : '1',
       database : 'sdc'
@@ -32,7 +32,7 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      host : 'database',
+      host : 'localhost',
       user : 'huy',
       password : '1',
       database : 'sdc'

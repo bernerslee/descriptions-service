@@ -1,0 +1,25 @@
+config:
+  target: "http://localhost:3001/"
+  phases:
+    - duration: 60
+      arrivalRate: 1000
+
+
+scenarios:
+  - name: "Test houses and prices api"
+    flow:
+      # - post:
+      #     url: "/search"
+      #     body: "kw={{ keywords }}"
+      #     capture:
+      #       json: "$.results[0].id"
+      #       as: "id"
+      - get:
+          url: "/houses/{{$randomNumber(0,9999999)}}"
+      - get:
+          url: "/prices/{{$randomNumber(0,9999999)}}"
+      # - think: 3
+      # - post:
+      #     url: "/cart"
+      #     json:
+      #       productId: "{{ id }}"

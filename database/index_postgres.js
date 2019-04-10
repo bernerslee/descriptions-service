@@ -2,7 +2,7 @@ const facker = require('faker');
 const knex = require('knex')({
   client: 'pg',
   connection: {
-    host : 'database',
+    host : 'localhost',
     user : 'huy',
     password : '1',
     database : 'sdc'
@@ -56,9 +56,6 @@ async function makePriceEntry(lastIndex,id) {
                 .then(function(data) { console.log(data) })
                 .catch(function(error) { console.log(error) });
 }
-
-// let fakeHouseData = [...Array(10000000).keys()].map(x => ++x).map(id => makeHouseEntry(id));
-// let fakePriceData = [...Array(10000000).keys()].map(x => ++x).map(id => makePriceEntry(id));
 
 module.exports = {knex, makeHouseEntry, makePriceEntry};
 

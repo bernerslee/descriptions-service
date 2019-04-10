@@ -1,4 +1,4 @@
-const makePriceEntry = require('../database/generate_fake_data').makePriceEntry;
+const makePriceEntry = require('../database/index_postgres.js').makePriceEntry;
 const stopWatch = require('statman-stopwatch');
 const sw = new stopWatch(true);
 exports.seed = function(knex, Promise) {

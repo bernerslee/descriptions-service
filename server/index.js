@@ -1,8 +1,8 @@
+require('newrelic');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3001
-const db = require('./../database/index.js')
 const cors = require('cors');
 const { Pool, Client } = require('pg')
 
@@ -17,7 +17,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'huy',
-  host: 'database',
+  host: 'localhost',
   database: 'sdc',
   password: '1',
   max: 20,
@@ -184,10 +184,5 @@ app.put('/houses/:id', (req, res) => {
     })
   })
 });
-
-
-
-// Update / PUT - update an item
-// Delete / DELETE - delete an item
 
 module.exports = app; // make available for testing
