@@ -3,10 +3,10 @@ const { performance } = require('perf_hooks');
 const {Pool} = require('pg');
 
 const pool = new Pool({
-    user: 'huy',
-    host: 'localhost',
+    // user: 'huy',
+    host: '172.17.0.2',
     database: 'sdc',
-    password: '1',
+    // password: '1',
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,

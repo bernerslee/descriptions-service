@@ -16,10 +16,10 @@ app.use(cors({origin:"http://localhost:3000"}))
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
-  user: 'huy',
-  host: 'localhost',
+  // user: 'huy',
+  host: '172.17.0.2',
   database: 'sdc',
-  password: '1',
+  // password: 'huy',
   max: 10,
   idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,

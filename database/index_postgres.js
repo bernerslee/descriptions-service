@@ -2,9 +2,9 @@ const facker = require('faker');
 const knex = require('knex')({
   client: 'pg',
   connection: {
-    host : 'localhost',
-    user : 'huy',
-    password : '1',
+    host : '172.17.0.2',
+    // user : 'huy',
+    // password : '1',
     database : 'sdc'
   },
   pool: {
