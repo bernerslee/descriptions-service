@@ -6,8 +6,8 @@ module.exports = {
     client: 'pg',
     connection: {
       host : '172.17.0.2',
-      // user : 'huy',
-      // password : 'huy',
+      user : 'postgres',
+      password : 'huy',
       database : 'sdc'
     },
   },
@@ -16,8 +16,8 @@ module.exports = {
     client: 'postgresql',
     connection: {
       host : '172.17.0.2',
-      // user : 'huy',
-      // password : 'huy',
+      user : 'postgres',
+      password : 'huy',
       database : 'sdc'
     },
     pool: {
@@ -32,8 +32,8 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      // host : '172.17.0.2',
-      // user : 'huy',
+      host : '172.17.0.2',
+      user : 'postgres',
       password : 'huy',
       database : 'sdc'
     },

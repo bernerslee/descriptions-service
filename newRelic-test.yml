@@ -17,6 +17,7 @@ scenarios:
           url: "/houses/{{$randomNumber(0,9999999)}}"
       - get:
           url: "/prices/{{$randomNumber(0,9999999)}}"
+
       # - think: 3
       # - post:
       #     url: "/cart"

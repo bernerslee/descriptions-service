@@ -3,8 +3,8 @@ const knex = require('knex')({
   client: 'pg',
   connection: {
     host : '172.17.0.2',
-    // user : 'huy',
-    // password : '1',
+    user : 'postgres',
+    password : 'huy',
     database : 'sdc'
   },
   pool: {
