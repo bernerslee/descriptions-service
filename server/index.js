@@ -2,7 +2,7 @@ require('newrelic');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const port = 3001
+const port = process.argv[2] || 3001
 const cors = require('cors');
 const { Pool, Client } = require('pg')
 
@@ -16,10 +16,10 @@ app.use(cors({origin:"http://localhost:3000"}))
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
-  user: 'postgres',
-  host: '172.17.0.2',
+  user: 'huy',
+  host: 'localhost',
   database: 'sdc',
-  password: 'huy',
+  password: '1',
   max: 10,
   idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,
