@@ -77,19 +77,36 @@ app.get('/houses/:id', (req, res) => {
 
 
 app.get('/prices/:id', (req, res) => {
-  pool.connect((err, client, release) => {
-    if (err) {
-      return console.error('Error acquiring client', err.stack)
+  clientRedis.get(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
+    if (error) {
+      console.log(error);
+      throw error;
+    } else if (result) {
+      res.send(JSON.parse(result));
+      res.end();
+    } else {
+      pool.connect((err, client, release) => {
+        if (err) {
+          return console.error('Error acquiring client', err.stack)
+        }
+        client.query(`SELECT * FROM prices where id = ${req.params.id}`, (err, result) => {
+          release()
+          if (err) {
+            return console.error('Error executing query', err.stack)
+          }
+          res.status(200)
+          clientRedis.set(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log(response);
+            }
+          });
+          res.send(result.rows);
+        })
+      })
     }
-    client.query(`SELECT * FROM prices where id = ${req.params.id}`, (err, result) => {
-      release()
-      if (err) {
-        return console.error('Error executing query', err.stack)
-      }
-      res.status(200)
-      res.send(result.rows);
-    })
-  })
+  });
 });
 
 app.post('/prices/:id', (req, res) => {
