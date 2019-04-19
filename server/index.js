@@ -4,23 +4,34 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = process.argv[2] || 3001
 const cors = require('cors');
-const { Pool, Client } = require('pg')
+const { Pool, Client } = require('pg');
+const redis = require('redis');
+const clientRedis = redis.createClient('6379', '54.215.207.174');
+
+clientRedis.on('connect', function() {
+    console.log('Redis client connected');
+});
+
+clientRedis.on('error', function (err) {
+    console.log('Something went wrong ' + err);
+});
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
+app.use('/loaderio-bc5c9f08dab0c06456b3a140dfa60bd5.txt',express.static(__dirname + '/./../loaderio-bc5c9f08dab0c06456b3a140dfa60bd5.txt'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors({origin:"http://localhost:3000"}))
+app.use(cors({origin:"localhost:3001"}))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '172.17.0.2',
+  host: '54.183.88.92',
   database: 'sdc',
   password: 'huy',
-  max: 10,
+  max: 100,
   idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,
 })
@@ -31,20 +42,39 @@ pool.on('error', (err, client) => {
 })
 
 app.get('/houses/:id', (req, res) => {
-  pool.connect((err, client, release) => {
-    if (err) {
-      return console.error('Error acquiring client', err.stack)
-    }
-    client.query(`SELECT * FROM houses where id = ${req.params.id}`, (err, result) => {
-      release()
-      if (err) {
-        return console.error('Error executing query', err.stack)
+  clientRedis.get(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
+    if (error) {
+        console.log(error);
+        throw error;
+    } else if (result) {
+      res.send(JSON.parse(result));
+      res.end();
+    } else {
+      pool.connect((err, client, release) => {
+          if (err) {
+            return console.error('Error acquiring client', err.stack)
+          }
+          client.query(`SELECT * FROM houses where id = ${req.params.id}`, (err, result) => {
+            release()
+            if (err) {
+              return console.error('Error executing query', err.stack)
+            }
+            res.status(200)
+            clientRedis.set(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
+              if(err) {
+                console.log(err)
+              } else {
+                console.log(response);
+              }
+            });
+            res.send(result.rows);
+          })
+        })
       }
-      res.status(200)
-      res.send(result.rows);
-    })
-  })
+  });
 });
+
+
 
 app.get('/prices/:id', (req, res) => {
   pool.connect((err, client, release) => {
