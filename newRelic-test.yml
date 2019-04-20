@@ -1,5 +1,5 @@
 config:
-  target: "http://localhost:3001"
+  target: "http://ec2-54-215-233-92.us-west-1.compute.amazonaws.com:3001"
   phases:
     - duration: 10
       arrivalRate: 1000
@@ -14,9 +14,9 @@ scenarios:
       #       json: "$.results[0].id"
       #       as: "id"
       - get:
-          url: "/houses/{{$randomNumber(0,9999999)}}"
+          url: "/houses/{{$randomNumber(9999900,9999999)}}"
       - get:
-          url: "/prices/{{$randomNumber(0,9999999)}}"
+          url: "/prices/{{$randomNumber(9999900,9999999)}}"
 
       # - think: 3
       # - post:

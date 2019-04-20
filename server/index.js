@@ -6,7 +6,7 @@ const port = process.argv[2] || 3001
 const cors = require('cors');
 const { Pool, Client } = require('pg');
 const redis = require('redis');
-const clientRedis = redis.createClient('6379', '54.215.207.174');
+const clientRedis = redis.createClient('6379', '54.215.233.92');
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -42,7 +42,7 @@ pool.on('error', (err, client) => {
 })
 
 app.get('/houses/:id', (req, res) => {
-  clientRedis.get(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
+  clientRedis.get(`http://ec2-54-215-233-92.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
     if (error) {
         console.log(error);
         throw error;
@@ -60,7 +60,7 @@ app.get('/houses/:id', (req, res) => {
               return console.error('Error executing query', err.stack)
             }
             res.status(200)
-            clientRedis.set(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
+            clientRedis.set(`http://ec2-54-215-233-92.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
               if(err) {
                 console.log(err)
               } else {
@@ -77,7 +77,7 @@ app.get('/houses/:id', (req, res) => {
 
 
 app.get('/prices/:id', (req, res) => {
-  clientRedis.get(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
+  clientRedis.get(`ec2-54-215-233-92.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
     if (error) {
       console.log(error);
       throw error;
@@ -95,7 +95,7 @@ app.get('/prices/:id', (req, res) => {
             return console.error('Error executing query', err.stack)
           }
           res.status(200)
-          clientRedis.set(`http://ec2-54-215-207-174.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+          clientRedis.set(`http://ec2-54-215-233-92.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
             if (err) {
               console.log(err)
             } else {
