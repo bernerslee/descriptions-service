@@ -7,7 +7,7 @@ const cors = require('cors');
 const { Pool, Client } = require('pg');
 
 const redis = require('redis');
-const clientRedis = redis.createClient('6379', '54.215.233.92');
+const clientRedis = redis.createClient('6379', '54.183.88.92');
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -19,7 +19,7 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-4c92d8d75e9b156fa6177d9dfd91bbec.txt',express.static(__dirname + '/./../loaderio-4c92d8d75e9b156fa6177d9dfd91bbec.txt'));
+app.use('/loaderio-70c324f8a765b3de5cd75ad55dd54b07.txt',express.static(__dirname + '/./../loaderio-70c324f8a765b3de5cd75ad55dd54b07.txt'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
