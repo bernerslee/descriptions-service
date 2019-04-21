@@ -19,11 +19,11 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-70c324f8a765b3de5cd75ad55dd54b07.txt',express.static(__dirname + '/./../loaderio-70c324f8a765b3de5cd75ad55dd54b07.txt'));
+app.use('/loaderio-b9fb949c9dfa52d79f09af2c0a22f257.txt',express.static(__dirname + '/./../loaderio-b9fb949c9dfa52d79f09af2c0a22f257.txt'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors({origin:"localhost:3001"}))
+app.use(cors({origin:"http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001"}))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
@@ -43,7 +43,7 @@ pool.on('error', (err, client) => {
 })
 
 app.get('/houses/:id', (req, res) => {
-  clientRedis.get(`http://ec2-13-52-163-168.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
+  clientRedis.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
     if (error) {
         console.log(error);
         throw error;
@@ -61,7 +61,7 @@ app.get('/houses/:id', (req, res) => {
               return console.error('Error executing query', err.stack)
             }
             res.status(200)
-            clientRedis.set(`http://ec2-13-52-163-168.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
+            clientRedis.set(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
               if(err) {
                 console.log(err)
               } else {
@@ -78,7 +78,7 @@ app.get('/houses/:id', (req, res) => {
 
 
 app.get('/prices/:id', (req, res) => {
-  clientRedis.get(`http://ec2-13-52-163-168.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
+  clientRedis.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
     if (error) {
       console.log(error);
       throw error;
@@ -96,7 +96,7 @@ app.get('/prices/:id', (req, res) => {
             return console.error('Error executing query', err.stack)
           }
           res.status(200)
-          clientRedis.set(`http://ec2-13-52-163-168.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+          clientRedis.set(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
             if (err) {
               console.log(err)
             } else {
