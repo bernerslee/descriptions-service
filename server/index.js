@@ -67,10 +67,11 @@ app.get('/houses/:id', (req, res) => {
                 console.log(err)
               } else {
                 console.log(response);
+                res.status(200);
+                res.send(result.rows);
               }
             });
-            res.status(200);
-            res.send(result.rows);
+
           })
         })
       }
@@ -92,20 +93,21 @@ app.get('/prices/:id', (req, res) => {
         if (err) {
           return console.error('Error acquiring client', err.stack)
         }
-        client.query(`SELECT * FROM prices where id = ${req.params.id}`, (err, result) => {
+        client.query(`SELECT * FROM prices where id = ${req.params.id}`,async (err, result) => {
           release()
           if (err) {
             return console.error('Error executing query', err.stack)
           }
-          res.status(200)
-          clientRedis.set(`prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+
+          await clientRedis.set(`prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
             if (err) {
               console.log(err)
             } else {
               console.log(response);
+              res.status(200)
+              res.send(result.rows);
             }
           });
-          res.send(result.rows);
         })
       })
     }
