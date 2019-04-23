@@ -7,7 +7,7 @@ const cors = require('cors');
 const { Pool, Client } = require('pg');
 
 const redis = require('redis');
-const clientRedis = redis.createClient('6379', '54.183.88.92');
+const clientRedis = redis.createClient('6379', '54.193.57.139');
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -30,7 +30,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '54.183.88.92',
+  host: '54.193.57.139',
   database: 'sdc',
   password: 'huy',
   max: 100,
