@@ -44,7 +44,7 @@ pool.on('error', (err, client) => {
 })
 
 app.get('/houses/:id', (req, res) => {
-  clientRedis.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, function (error, result) {
+  clientRedis.get(`houses/${req.params.id}`, function (error, result) {
     if (error) {
         console.log(error);
         throw error;
@@ -56,19 +56,20 @@ app.get('/houses/:id', (req, res) => {
           if (err) {
             return console.error('Error acquiring client', err.stack)
           }
-          client.query(`SELECT * FROM houses where id = ${req.params.id}`, (err, result) => {
+          client.query(`SELECT * FROM houses where id = ${req.params.id}`,async (err, result) => {
             release()
             if (err) {
               return console.error('Error executing query', err.stack)
             }
-            res.status(200)
-            clientRedis.set(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
+
+            await clientRedis.set(`houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
               if(err) {
                 console.log(err)
               } else {
                 console.log(response);
               }
             });
+            res.status(200);
             res.send(result.rows);
           })
         })
@@ -79,7 +80,7 @@ app.get('/houses/:id', (req, res) => {
 
 
 app.get('/prices/:id', (req, res) => {
-  clientRedis.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, function (error, result) {
+  clientRedis.get(`prices/${req.params.id}`, function (error, result) {
     if (error) {
       console.log(error);
       throw error;
@@ -97,7 +98,7 @@ app.get('/prices/:id', (req, res) => {
             return console.error('Error executing query', err.stack)
           }
           res.status(200)
-          clientRedis.set(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+          clientRedis.set(`prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
             if (err) {
               console.log(err)
             } else {
