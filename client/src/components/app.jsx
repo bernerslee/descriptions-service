@@ -22,7 +22,7 @@ class App extends React.Component {
   componentDidMount() {
     let id = window.location.pathname.split('/')[1]; //revise
     console.log('pathname',window.location.pathname);
-    $.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/houses/${id}`, (data) => {
+    $.get(`/houses/${id}`, (data) => {
 
       let house = data[0];
       this.setState({
@@ -35,7 +35,7 @@ class App extends React.Component {
         }
       });
 
-      $.get(`http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001/prices/${id}`, (data) => {
+      $.get(`/prices/${id}`, (data) => {
         this.setState({price: data[0].price})
       });
 
