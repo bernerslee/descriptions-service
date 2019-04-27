@@ -19,8 +19,8 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-5c4673f2ab2595337bed2c847e319716/',express.static(__dirname + '/./../loaderio-5c4673f2ab2595337bed2c847e319716.txt'));
-app.use('/loaderio-5c4673f2ab2595337bed2c847e319716.txt',express.static(__dirname + '/./../loaderio-5c4673f2ab2595337bed2c847e319716.txt'));
+app.use('/loaderio-178841d66cee33cdaa76db17807d4077/',express.static(__dirname + '/./../loaderio-178841d66cee33cdaa76db17807d4077.txt'));
+app.use('/loaderio-178841d66cee33cdaa76db17807d4077.txt',express.static(__dirname + '/./../loaderio-178841d66cee33cdaa76db17807d4077.txt'));
 app.use('/loaderio.json',express.static(__dirname + '/./../loaderio.json'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
