@@ -1,4 +1,4 @@
-require('newrelic');
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,7 +7,7 @@ const cors = require('cors');
 const { Pool, Client } = require('pg');
 
 const redis = require('redis');
-const clientRedis = redis.createClient('6379', '54.193.57.139');
+const clientRedis = redis.createClient('6379', '172.31.29.41');
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -19,19 +19,19 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d/',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
-app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d.txt',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
+app.use('/loaderio-5c4673f2ab2595337bed2c847e319716/',express.static(__dirname + '/./../loaderio-5c4673f2ab2595337bed2c847e319716.txt'));
+app.use('/loaderio-5c4673f2ab2595337bed2c847e319716.txt',express.static(__dirname + '/./../loaderio-5c4673f2ab2595337bed2c847e319716.txt'));
 app.use('/loaderio.json',express.static(__dirname + '/./../loaderio.json'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors({origin:"http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001"}))
+//app.use(cors({origin:"http://ec2-54-183-221-61.us-west-1.compute.amazonaws.com:3001"}))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '54.193.57.139',
+  host: '172.31.29.41',
   database: 'sdc',
   password: 'huy',
   max: 100,
@@ -45,7 +45,7 @@ pool.on('error', (err, client) => {
 })
 
 app.get('/houses/:id', (req, res) => {
-  clientRedis.get(`houses/${req.params.id}`, function (error, result) {
+  clientRedis.hget(`house:${req.params.id}`, 'data', function (error, result) {
     if (error) {
         console.log(error);
         throw error;
@@ -63,7 +63,7 @@ app.get('/houses/:id', (req, res) => {
               return console.error('Error executing query', err.stack)
             }
 
-            await clientRedis.set(`houses/${req.params.id}`, JSON.stringify(result.rows), (err,response)=>{
+            await clientRedis.hset(`house:${req.params.id}`, 'data', JSON.stringify(result.rows), (err,response)=>{
               if(err) {
                 console.log(err)
               } else {
@@ -72,7 +72,6 @@ app.get('/houses/:id', (req, res) => {
                 res.send(result.rows);
               }
             });
-
           })
         })
       }
@@ -82,7 +81,7 @@ app.get('/houses/:id', (req, res) => {
 
 
 app.get('/prices/:id', (req, res) => {
-  clientRedis.get(`prices/${req.params.id}`, function (error, result) {
+  clientRedis.hget(`price:${req.params.id}`, 'data', function (error, result) {
     if (error) {
       console.log(error);
       throw error;
@@ -100,7 +99,7 @@ app.get('/prices/:id', (req, res) => {
             return console.error('Error executing query', err.stack)
           }
 
-          await clientRedis.set(`prices/${req.params.id}`, JSON.stringify(result.rows), (err, response) => {
+          await clientRedis.hset(`price:${req.params.id}`, 'data', JSON.stringify(result.rows), (err, response) => {
             if (err) {
               console.log(err)
             } else {
