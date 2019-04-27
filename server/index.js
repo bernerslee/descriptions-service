@@ -2,8 +2,8 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const port = process.argv[2] || 3001
-const cors = require('cors');
+const port = 3001;
+// const cors = require('cors');
 const { Pool, Client } = require('pg');
 
 const redis = require('redis');
@@ -19,8 +19,8 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-178841d66cee33cdaa76db17807d4077/',express.static(__dirname + '/./../loaderio-178841d66cee33cdaa76db17807d4077.txt'));
-app.use('/loaderio-178841d66cee33cdaa76db17807d4077.txt',express.static(__dirname + '/./../loaderio-178841d66cee33cdaa76db17807d4077.txt'));
+app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d/',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
+app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d.txt',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
 app.use('/loaderio.json',express.static(__dirname + '/./../loaderio.json'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
