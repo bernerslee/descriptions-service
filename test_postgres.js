@@ -1,6 +1,6 @@
 const knex = require('./database/index_postgres').knex;
 const { performance } = require('perf_hooks');
-const {Pool} = require('pg');
+const {Pool} = require('pg-pool');
 
 const pool = new Pool({
     user: 'postgres',

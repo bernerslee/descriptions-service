@@ -4,10 +4,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3001;
 // const cors = require('cors');
-const { Pool, Client } = require('pg');
+const Pool = require('pg-pool');
 
 const redis = require('redis');
-const clientRedis = redis.createClient('6379', '172.31.29.41');
+const clientRedis = redis.createClient("6379", "172.31.4.20");
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -19,8 +19,8 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d/',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
-app.use('/loaderio-b6aabe24551b680cde22ba36debfaf4d.txt',express.static(__dirname + '/./../loaderio-b6aabe24551b680cde22ba36debfaf4d.txt'));
+app.use('/loaderio-b8d2034fcdb6827bfc81db88a55ca8aa/',express.static(__dirname + '/./../loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt'));
+app.use('/loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt',express.static(__dirname + '/./../loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt'));
 app.use('/loaderio.json',express.static(__dirname + '/./../loaderio.json'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
@@ -31,10 +31,10 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '172.31.29.41',
+  host: '13.56.16.211',
   database: 'sdc',
   password: 'huy',
-  max: 100,
+  max: 1000,
   idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,
 })
@@ -43,28 +43,30 @@ pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err)
   process.exit(-1)
 })
-
+// pool.connect().then(client => {
+//   client.query('select $1::text as name', ['pg-pool']).then(res => {
+//     client.release()
+//     console.log('hello from', res.rows[0].name)
+//   })
+//   .catch(e => {
+//     client.release()
+//     console.error('query error', e.message, e.stack)
+//   })
+// })
 app.get('/houses/:id', (req, res) => {
   clientRedis.hget(`house:${req.params.id}`, 'data', function (error, result) {
     if (error) {
-        console.log(error);
-        throw error;
+      console.log(error);
+      throw error;
     } else if (result) {
       res.send(JSON.parse(result));
       res.end();
     } else {
-      pool.connect((err, client, release) => {
-          if (err) {
-            return console.error('Error acquiring client', err.stack)
-          }
-          client.query(`SELECT * FROM houses where id = ${req.params.id}`,async (err, result) => {
-            release()
-            if (err) {
-              return console.error('Error executing query', err.stack)
-            }
-
-            await clientRedis.hset(`house:${req.params.id}`, 'data', JSON.stringify(result.rows), (err,response)=>{
-              if(err) {
+      pool.connect().then((client) => {
+        client.query(`SELECT * FROM houses where id = ${req.params.id}`).then( async(result) => {
+          client.release();
+            await clientRedis.hset(`house:${req.params.id}`, 'data', JSON.stringify(result.rows), (err, response) => {
+              if (err) {
                 console.log(err)
               } else {
                 console.log(response);
@@ -72,13 +74,17 @@ app.get('/houses/:id', (req, res) => {
                 res.send(result.rows);
               }
             });
-          })
+          }).catch(e => {
+              console.error('query error', e.message, e.stack)
+            })
         })
-      }
-  });
+        .catch(e => {
+            client.release()
+            console.error('query error', e.message, e.stack)
+      })
+    }
+  })
 });
-
-
 
 app.get('/prices/:id', (req, res) => {
   clientRedis.hget(`price:${req.params.id}`, 'data', function (error, result) {
@@ -89,29 +95,28 @@ app.get('/prices/:id', (req, res) => {
       res.send(JSON.parse(result));
       res.end();
     } else {
-      pool.connect((err, client, release) => {
-        if (err) {
-          return console.error('Error acquiring client', err.stack)
-        }
-        client.query(`SELECT * FROM prices where id = ${req.params.id}`,async (err, result) => {
-          release()
-          if (err) {
-            return console.error('Error executing query', err.stack)
-          }
-
-          await clientRedis.hset(`price:${req.params.id}`, 'data', JSON.stringify(result.rows), (err, response) => {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log(response);
-              res.status(200)
-              res.send(result.rows);
-            }
-          });
+      pool.connect().then((client) => {
+        client.query(`SELECT * FROM prices where id = ${req.params.id}`).then( async(result) => {
+          client.release();
+            await clientRedis.hset(`price:${req.params.id}`, 'data', JSON.stringify(result.rows), (err, response) => {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log(response);
+                res.status(200);
+                res.send(result.rows);
+              }
+            });
+          }).catch(e => {
+              console.error('query error', e.message, e.stack)
+            })
         })
+        .catch(e => {
+            client.release()
+            console.error('query error', e.message, e.stack)
       })
     }
-  });
+  })
 });
 
 app.post('/prices/:id', (req, res) => {
