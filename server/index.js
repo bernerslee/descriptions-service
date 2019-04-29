@@ -7,7 +7,7 @@ const port = 3001;
 const Pool = require('pg-pool');
 
 const redis = require('redis');
-const clientRedis = redis.createClient("6379", "172.31.4.20");
+const clientRedis = redis.createClient("6379", "172.31.13.105");
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
