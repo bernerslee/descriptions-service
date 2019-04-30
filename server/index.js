@@ -31,7 +31,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '13.57.189.39',
+  host: '52.53.197.116',
   database: 'sdc',
   // password: 'huy',
   max: 1000,
@@ -43,16 +43,7 @@ pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err)
   process.exit(-1)
 })
-// pool.connect().then(client => {
-//   client.query('select $1::text as name', ['pg-pool']).then(res => {
-//     client.release()
-//     console.log('hello from', res.rows[0].name)
-//   })
-//   .catch(e => {
-//     client.release()
-//     console.error('query error', e.message, e.stack)
-//   })
-// })
+
 app.get('/houses/:id', (req, res) => {
   clientRedis.hget(`house:${req.params.id}`, 'data', function (error, result) {
     if (error) {
