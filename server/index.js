@@ -7,7 +7,7 @@ const port = 3001;
 const Pool = require('pg-pool');
 
 const redis = require('redis');
-const clientRedis = redis.createClient("6379", "172.31.13.105");
+const clientRedis = redis.createClient("6379", "54.67.121.253");
 
 clientRedis.on('connect', function() {
     console.log('Redis client connected');
@@ -19,8 +19,8 @@ clientRedis.on('error', function (err) {
 
 
 app.use(express.static(__dirname + '/./../client/dist'))
-app.use('/loaderio-b8d2034fcdb6827bfc81db88a55ca8aa/',express.static(__dirname + '/./../loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt'));
-app.use('/loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt',express.static(__dirname + '/./../loaderio-b8d2034fcdb6827bfc81db88a55ca8aa.txt'));
+app.use('/loaderio-287b6c180c0c4eb9756c653d155d3e09/',express.static(__dirname + '/./../loaderio-287b6c180c0c4eb9756c653d155d3e09.txt'));
+app.use('/loaderio-287b6c180c0c4eb9756c653d155d3e09.txt',express.static(__dirname + '/./../loaderio-287b6c180c0c4eb9756c653d155d3e09.txt'));
 app.use('/loaderio.json',express.static(__dirname + '/./../loaderio.json'));
 app.use('/:id', express.static(__dirname + '/./../client/dist'));
 app.use(bodyParser.json());
@@ -31,9 +31,9 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 const pool = new Pool({
   user: 'postgres',
-  host: '13.56.16.211',
+  host: '13.57.189.39',
   database: 'sdc',
-  password: 'huy',
+  // password: 'huy',
   max: 1000,
   idleTimeoutMillis: 3000,
   connectionTimeoutMillis: 2000,
@@ -57,7 +57,7 @@ app.get('/houses/:id', (req, res) => {
   clientRedis.hget(`house:${req.params.id}`, 'data', function (error, result) {
     if (error) {
       console.log(error);
-      throw error;
+      //throw error;
     } else if (result) {
       res.send(JSON.parse(result));
       res.end();
@@ -75,11 +75,11 @@ app.get('/houses/:id', (req, res) => {
               }
             });
           }).catch(e => {
+              client.release();
               console.error('query error', e.message, e.stack)
             })
         })
         .catch(e => {
-            client.release()
             console.error('query error', e.message, e.stack)
       })
     }
@@ -90,7 +90,7 @@ app.get('/prices/:id', (req, res) => {
   clientRedis.hget(`price:${req.params.id}`, 'data', function (error, result) {
     if (error) {
       console.log(error);
-      throw error;
+      // throw error;
     } else if (result) {
       res.send(JSON.parse(result));
       res.end();
@@ -108,11 +108,12 @@ app.get('/prices/:id', (req, res) => {
               }
             });
           }).catch(e => {
+              client.release();
               console.error('query error', e.message, e.stack)
             })
         })
         .catch(e => {
-            client.release()
+            // client.release()
             console.error('query error', e.message, e.stack)
       })
     }
